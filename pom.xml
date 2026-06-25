@@ -12,22 +12,54 @@
     </parent>
 
     <artifactId>fireflyframework-security-webflux</artifactId>
-    <version>26.06.02</version>
+    <!-- Dev version, distinct from the 26.06.02 release so it coexists in .m2 without overwriting it. -->
+    <version>26.06.03-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>Firefly Framework - Security WebFlux Binding</name>
     <description>Reactive Spring Security binding: principal projection, ReactiveSecurityContext access, and the URL policy enforcement point</description>
 
+    <!--
+        This module is 26.06.03-SNAPSHOT but the only changed dependency is security-core (also
+        26.06.03-SNAPSHOT); api/spi are the unchanged 26.06.02 release. fireflyframework-parent
+        manages the security platform to ${project.version}, which here leaks 26.06.03-SNAPSHOT to
+        the transitive spi/api too; pin them back to 26.06.02.
+    -->
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.fireflyframework</groupId>
+                <artifactId>fireflyframework-security-api</artifactId>
+                <version>26.06.02</version>
+            </dependency>
+            <dependency>
+                <groupId>org.fireflyframework</groupId>
+                <artifactId>fireflyframework-security-spi</artifactId>
+                <version>26.06.02</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <dependencies>
+        <!-- api is unchanged (pin to 26.06.02); core carries the new ConfigurableTenantResolver, so
+             track the dev version. ${project.version} would leak the dev version to api too. -->
         <dependency>
             <groupId>org.fireflyframework</groupId>
             <artifactId>fireflyframework-security-api</artifactId>
-            <version>${project.version}</version>
+            <version>26.06.02</version>
         </dependency>
         <dependency>
             <groupId>org.fireflyframework</groupId>
             <artifactId>fireflyframework-security-core</artifactId>
-            <version>${project.version}</version>
+            <version>26.06.03-SNAPSHOT</version>
+        </dependency>
+
+        <!-- Boot autoconfigure for the opt-in header-bridge auto-configuration (off by default).
+             Compile-scope, matching every other security module that ships an autoconfig
+             (method-policy, oauth2-client, resource-server, ...). -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-autoconfigure</artifactId>
         </dependency>
 
         <dependency>
