@@ -30,6 +30,14 @@
             <version>${project.version}</version>
         </dependency>
 
+        <!-- Boot autoconfigure for the opt-in header-bridge auto-configuration (off by default).
+             Compile-scope, matching every other security module that ships an autoconfig
+             (method-policy, oauth2-client, resource-server, ...). -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-autoconfigure</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-core</artifactId>
